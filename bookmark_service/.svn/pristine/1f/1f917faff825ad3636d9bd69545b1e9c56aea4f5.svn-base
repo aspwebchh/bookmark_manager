@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Configs>
-    <ConnectingString>oss:vUBerOnm@tcp(192.168.110.232:3306)/bookmark?charset=utf8</ConnectingString>
-</Configs>

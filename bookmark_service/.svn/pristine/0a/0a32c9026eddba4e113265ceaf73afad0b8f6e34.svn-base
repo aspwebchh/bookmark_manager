@@ -1,4 +1,0 @@
-2017/01/24 13:58:31 C:/dev/chrome_plugin/chrome_plugin_service/db_helper/DataBase.go:74: sql: converting Exec argument #0's type: unsupported type []interface {}, a slice
-2017/01/24 14:01:03 C:/dev/chrome_plugin/chrome_plugin_service/db_helper/DataBase.go:74: sql: converting Exec argument #0's type: unsupported type []string, a slice
-2017/01/24 14:01:13 C:/dev/chrome_plugin/chrome_plugin_service/db_helper/DataBase.go:74: sql: converting Exec argument #0's type: unsupported type []string, a slice
-2017/01/24 14:01:15 C:/dev/chrome_plugin/chrome_plugin_service/db_helper/DataBase.go:74: sql: converting Exec argument #0's type: unsupported type []string, a slice
