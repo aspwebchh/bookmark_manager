@@ -1,0 +1,145 @@
+var Control;
+(function (Control) {
+    var SendResultState;
+    (function (SendResultState) {
+        SendResultState[SendResultState["df"] = 1] = "df";
+        SendResultState[SendResultState["success"] = 2] = "success";
+        SendResultState[SendResultState["fail"] = 3] = "fail";
+    })(SendResultState || (SendResultState = {}));
+    function getUIDs(callback) {
+        var result = new Object;
+        var uidEl = $("#user_id").get(0);
+        var uidFile = uidEl.files[0];
+        if (!uidFile) {
+            result.error = true;
+            result.message = "\u6CA1\u6709\u8BFB\u53D6\u5230\u6587\u4EF6";
+            callback(result);
+            return;
+        }
+        var fileReader = new FileReader();
+        fileReader.readAsBinaryString(uidFile);
+        fileReader.onload = function (env) {
+            var value = $.trim(fileReader.result);
+            if (value == null || value == "") {
+                result.error = true;
+                result.message = "\u6587\u4EF6\u65E0\u6570\u636E";
+                callback(result);
+            }
+            else {
+                result.error = false;
+                result.message = "";
+                result.data = string2Array(value);
+                callback(result);
+            }
+        };
+    }
+    function string2Array(str) {
+        var items = str.split(/\s/);
+        items = items.map(function (n) {
+            return $.trim(n);
+        }).filter(function (n) {
+            return n.length > 0;
+        });
+        return items;
+    }
+    function init() {
+        $("#submit").bind("click", function () {
+            getUIDs(function (result) {
+                if (result.error) {
+                    alert(result.message);
+                }
+                else {
+                    var temp = {};
+                    var sendPool = new SendPool(result.data);
+                    sendPool.start();
+                }
+            });
+        });
+    }
+    var SendPool = (function () {
+        function SendPool(uids) {
+            var _this = this;
+            this.pool = [];
+            uids.forEach(function (uid) {
+                var sendResult = {};
+                sendResult.uid = uid;
+                sendResult.state = SendResultState.df;
+                _this.pool.push(sendResult);
+            });
+        }
+        SendPool.prototype.sendMessage = function (data) {
+            var _this = this;
+            var result = "";
+            chrome.tabs.getSelected(function (tab) {
+                chrome.tabs.sendRequest(tab.id, data, function (response) {
+                    if (response.success) {
+                        _this.markUidToPool(response.uid, SendResultState.success);
+                    }
+                    else {
+                        _this.markUidToPool(response.uid, SendResultState.fail);
+                    }
+                });
+            });
+        };
+        SendPool.prototype.showResult = function () {
+            console.log("\u53D1\u9001\u5B8C\u6210");
+            this.showProcess();
+        };
+        SendPool.prototype.showProcess = function () {
+            var _this = this;
+            var getCount = function (state) {
+                return _this.pool.filter(function (item) {
+                    return item.state == state;
+                }).length;
+            };
+            var dfCount = getCount(SendResultState.df);
+            var successCount = getCount(SendResultState.success);
+            var failCount = getCount(SendResultState.fail);
+            var processHtml = "";
+            processHtml += "\u6210\u529F\uFF1A" + successCount + ",\n                            \u5931\u8D25\uFF1A" + failCount + ",\n                            \u672A\u53D1\u9001\uFF1A" + dfCount;
+            $("#proccess").html(processHtml);
+        };
+        SendPool.prototype.getGiftData = function (uid) {
+            var data = {};
+            data.coins = $("#coins").val();
+            data.gems = $("#gems").val();
+            data.message = $("#message").val();
+            data.subject = $("#subject").val();
+            data.recipient = uid;
+            return data;
+        };
+        SendPool.prototype.start = function () {
+            var _this = this;
+            var timer = window.setInterval(function () {
+                var uid = _this.getUID();
+                if (uid == null) {
+                    window.clearInterval(timer);
+                    _this.showResult();
+                    return;
+                }
+                _this.sendMessage(_this.getGiftData(uid));
+                _this.showProcess();
+            }, 100);
+        };
+        SendPool.prototype.markUidToPool = function (uid, state) {
+            for (var _i = 0, _a = this.pool; _i < _a.length; _i++) {
+                var sendResult = _a[_i];
+                if (sendResult.uid == uid && sendResult.state == SendResultState.df) {
+                    sendResult.state = state;
+                    break;
+                }
+            }
+        };
+        SendPool.prototype.getUID = function () {
+            for (var _i = 0, _a = this.pool; _i < _a.length; _i++) {
+                var sendResult = _a[_i];
+                if (sendResult.state == SendResultState.df) {
+                    return sendResult.uid;
+                }
+            }
+            return null;
+        };
+        return SendPool;
+    }());
+    init();
+})(Control || (Control = {}));

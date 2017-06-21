@@ -1,0 +1,129 @@
+﻿///<reference path="jquery/jquery.d.ts" />
+///<reference path="bookmark_container.ts" />
+namespace BookMark {
+    export enum MenuType {
+        BookMarkNavMenu,
+        PageList
+    }
+
+    export abstract class RightClickMenu {
+        protected ele: JQuery;
+
+        public show(left: number, top: number): void {
+            this.ele.show().offset({ left: left, top: top });
+        }
+
+        public hide(): void {
+            this.ele.hide();
+        }
+
+        public render(): void {
+            let html = this.getMenuHtml();
+            let menuElement = $(html).hide();
+            $('body').append(menuElement);
+            this.ele = menuElement;
+
+            $(document).bind("click", (e: JQueryEventObject) => {
+                if (this.ele.get(0).contains(e.target)) {
+                    return;
+                }
+                this.hide();
+            });
+
+            this.ele.find("li").bind("mouseover", function () {
+                $(this).addClass("selected");
+            }).bind("mouseout", function () {
+                $(this).removeClass("selected");
+            });
+
+            this.ele.find("li").click((e: JQueryEventObject) => {
+                let id = e.target.id;
+                this.hide();
+                this.eventProxy(id);
+            });
+        }
+
+        protected abstract eventProxy(evenName: string);
+
+        protected abstract getMenuHtml(): string;
+    }
+
+
+    export class BookMarkRightClickMenu extends RightClickMenu {
+        private targetNode: BookMarkNode;
+
+        public onAddDir = () => { }
+        public onAddPage = () => { }
+        public onDel = () => { }
+        public onRename = () => { }
+
+        public setTargetNode(node: BookMarkNode) {
+            this.targetNode = node;
+        }
+
+        public getTargetNode(): BookMarkNode {
+            return this.targetNode;
+        }
+
+        protected eventProxy(evenName: string) {
+            switch (evenName) {
+                case "add_dir":
+                    this.onAddDir();
+                    break;
+                case "add_page":
+                    this.onAddPage();
+                    break;
+                case "del":
+                    this.onDel();
+                    break;
+                case "rename":
+                    this.onRename();
+                    break;
+            }
+        }
+
+        protected getMenuHtml(): string {
+            return `<div class="menu" id='right_click_menu'>
+                            <ul>
+                                <li id="add_dir">添加文件夹</li>
+                                <li id="add_page">添加网页</li>
+                                <li id="del">删除</li>
+                                <li id="rename">重命名</li>
+                            </ul>
+                        </div>`;
+        }
+
+    }
+
+
+    export class PageListRightClickMenu extends RightClickMenu {
+        public onOpen = () => { }
+        public onEdit = () => { }
+        public onDel = () => { }
+
+        protected eventProxy(evenName: string) {
+            switch (evenName) {
+                case "open_url":
+                    this.onOpen();
+                    break;
+                case "del":
+                    this.onDel();
+                    break;
+                case "edit":
+                    this.onEdit();
+                    break;
+            }
+        }
+
+        protected getMenuHtml(): string {
+            return `<div class="menu" id='right_click_menu'>
+                            <ul>
+                                <li id="open_url">打开网页</li>
+                                <li id="del">删除</li>
+                                <li id="edit">编辑</li>
+                            </ul>
+                        </div>`;
+        }
+
+    }
+}

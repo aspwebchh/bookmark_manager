@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="app.css" rel="stylesheet" type="text/css" />
+</head>
+<body class="popup">
+    <table>
+        <tr>
+            <th>名称</th>
+            <td>
+                <input type="text" id="title"/>
+
+            </td>
+        </tr>
+        <tr>
+            <th>网址</th>
+            <td>
+                <input type="text" id="url" />
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" valign="top">
+              <div  class="cate" id="cate"></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="button" value="确定" class="ok" id="ok"/>
+                <input type="button" value="管理" class="update" id="update"/>
+                <span class="error_msg" id="error_msg"></span>
+            </td>
+        </tr>
+    </table>
+    
+
+    <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_right_click_menu.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_container.js"></script>
+    <script type="text/javascript" src="popup.js"></script>
+</body>
+</html>

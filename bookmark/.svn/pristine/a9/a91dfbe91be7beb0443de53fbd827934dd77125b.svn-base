@@ -1,0 +1,13 @@
+var BookMark;
+(function (BookMark) {
+    var BookMarkPageList = (function () {
+        function BookMarkPageList() {
+            this.dataList = [];
+        }
+        BookMarkPageList.prototype.add = function (dataItem) {
+            this.dataList.push(dataItem);
+        };
+        return BookMarkPageList;
+    }());
+})(BookMark || (BookMark = {}));
+//# sourceMappingURL=bookmark_page_list.js.map

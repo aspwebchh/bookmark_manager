@@ -1,0 +1,161 @@
+namespace Control{
+    type FileReaderResult = {
+        error : boolean,
+        message: string,
+        data? : string[]
+    }
+    
+    enum SendResultState{
+        df = 1,
+        success = 2,
+        fail = 3
+    }
+   
+    interface SendResult{
+        uid : string,
+        state: SendResultState
+    }
+    
+    function getUIDs( callback: (result: FileReaderResult) => void ) {
+        let result  = new Object as FileReaderResult;
+        let uidEl = $("#user_id").get(0) as HTMLInputElement;
+        let uidFile = uidEl.files[0];
+        if( !uidFile ) {
+            result.error = true;
+            result.message = `没有读取到文件`;
+            callback( result );
+            return;
+        }
+        let fileReader = new FileReader();
+        fileReader.readAsBinaryString(uidFile);
+        fileReader.onload = (env: Event) => {
+            let value = $.trim( fileReader.result );
+            if( value == null || value == "" ) {
+                result.error = true;
+                result.message = `文件无数据`;
+                callback( result );
+            } else {
+                result.error = false;
+                result.message = "";
+                result.data = string2Array( value );
+                callback( result );
+            }
+        }
+    }
+    
+    function string2Array( str: string ) : string[] {
+        let items = str.split(/\s/);
+        items = items.map( (n)=>{
+          return $.trim( n );
+        }).filter(n=>{
+           return n.length > 0; 
+        });
+        return items;
+    }
+           
+    function init() {        
+       $("#submit").bind("click", function(){            
+           getUIDs((result: FileReaderResult)=> {
+             if( result.error ) {
+                 alert( result.message );
+             } else {
+                 let temp = {};
+                 let sendPool = new SendPool(result.data);
+                 sendPool.start();
+             }
+           });
+        });
+    }
+    
+    
+    class SendPool{
+        private pool = [] as SendResult[];
+        
+        constructor( uids : string[]) {
+            uids.forEach( uid => {
+                 let sendResult = {} as SendResult;
+                 sendResult.uid = uid;
+                 sendResult.state = SendResultState.df;
+                 this.pool.push(sendResult);
+            });
+        }
+                
+        private sendMessage( data: GiftData ) {
+            let result = "";
+            chrome.tabs.getSelected((tab: chrome.tabs.Tab ) => {
+            chrome.tabs.sendRequest(tab.id, data,( response: ReturnData ) =>{
+                if( response.success ) {
+                    this.markUidToPool(response.uid, SendResultState.success );
+                } else {
+                    this.markUidToPool( response.uid, SendResultState.fail );
+                }
+            }) 
+            });
+        }
+            
+        private showResult() {
+            console.log(`发送完成`);
+            this.showProcess();
+        }
+        
+        private showProcess() {
+            let getCount = (state: SendResultState) =>{
+                return this.pool.filter(item=>{
+                    return item.state == state;
+                }).length;
+            }
+            let dfCount = getCount(SendResultState.df);
+            let successCount = getCount(SendResultState.success);
+            let failCount = getCount(SendResultState.fail);
+            let processHtml = "";
+            processHtml += `成功：${successCount},
+                            失败：${failCount},
+                            未发送：${dfCount}`;
+            $("#proccess").html( processHtml );
+        }
+        
+        private getGiftData( uid: string ) {
+                let data = {} as GiftData;
+                data.coins = $("#coins").val();
+                data.gems = $("#gems").val();
+                data.message = $("#message").val();
+                data.subject = $("#subject").val();
+                data.recipient = uid;
+                return data;
+            }
+        
+        public start() {
+            let timer = window.setInterval(()=>{
+                var uid = this.getUID();
+                if( uid == null ) {
+                    window.clearInterval( timer );
+                    this.showResult();
+                    return;
+                }
+            this.sendMessage(this.getGiftData(uid));
+            this.showProcess();
+            },100);
+        }
+        
+        public markUidToPool( uid: string, state: SendResultState ) {
+            for( let sendResult of this.pool ) {
+                if( sendResult.uid == uid && sendResult.state == SendResultState.df ) {
+                    sendResult.state = state;
+                    break;
+                }
+            }
+        }
+        
+        private getUID() {
+            for(let sendResult of this.pool ) {
+                if( sendResult.state == SendResultState.df ) {
+                    return sendResult.uid;
+                }
+            }
+            return null;
+        }
+    
+    }
+    
+    init();
+}

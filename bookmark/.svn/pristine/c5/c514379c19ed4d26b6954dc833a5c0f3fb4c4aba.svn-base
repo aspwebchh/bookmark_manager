@@ -1,0 +1,30 @@
+/// <reference path="jquery/jquery.d.ts" />
+var ContentScripts;
+(function (ContentScripts) {
+    function init() {
+        chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+            var giftData = request;
+            sendGifts(giftData, function (data) {
+                var reData = {};
+                reData.success = true;
+                reData.uid = giftData.recipient;
+                sendResponse(reData);
+            });
+        });
+    }
+    function sendGifts(giftData, callback) {
+        var ajaxOption = new Object;
+        ajaxOption.url = "/support/gift_user/";
+        ajaxOption.method = "post";
+        ajaxOption.dataType = "html";
+        ajaxOption.data = giftData;
+        ajaxOption.success = function (response) {
+            callback(response);
+        };
+        $.ajax(ajaxOption);
+    }
+    $(function () {
+        init();
+    });
+})(ContentScripts || (ContentScripts = {}));
+//# sourceMappingURL=content.js.map

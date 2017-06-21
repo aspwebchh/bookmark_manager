@@ -1,0 +1,13 @@
+var BookMark;
+(function (BookMark) {
+    var BookMarkRightClickMenu = (function () {
+        function BookMarkRightClickMenu() {
+        }
+        BookMarkRightClickMenu.prototype.render = function () {
+            var html = "<div class=\"menu\">\n                            <ul>\n                                <li>\u6DFB\u52A0\u6587\u4EF6\u5939</li>\n                                <li>\u6DFB\u52A0\u7F51\u9875</li>\n                                <li>\u5220\u9664</li>\n                            </ul>\n                        </div>";
+        };
+        return BookMarkRightClickMenu;
+    }());
+    BookMark.BookMarkRightClickMenu = BookMarkRightClickMenu;
+})(BookMark || (BookMark = {}));
+//# sourceMappingURL=menu.js.map

@@ -1,0 +1,19 @@
+﻿*{ margin:0; padding:0;}
+body { font-family: 'Segoe UI', sans-serif; font-size:12px;width: 500px;height: 500px;border: 1px solid #ccc;}
+ul,li{ list-style:none;}
+
+.nav {  1px solid #000; margin-left:-20px; width:150px; height:100%; border-right:1px solid #ccc; overflow-x:auto;}
+
+.nav li{ margin-left:15px; padding:1px 0;}
+
+a{ display:inline-block; text-indent:20px; background-repeat:no-repeat; cursor:default;}
+a.open{ background-image:url(images/open.png); }
+a.close{ background-image:url(images/close.png);}
+
+.node_leaf a{ margin-left:16px;}
+
+.icon{ display:inline-block; transform: rotate(-90deg); transition: all 150ms;background: url(images/state.svg) no-repeat center center; background-size: 8px 5px; display: inline-block; height: 16px; opacity: .6; position: relative;vertical-align: top;width: 16px;}
+ .icon.open {transform: rotate(0);}
+
+ .menu{ position:absolute; border:1px solid #ccc;box-shadow:1px 1px 2px #333333; background:#fff; padding:2px 0; z-index:999;}
+ .menu li{ padding:5px 8px;}

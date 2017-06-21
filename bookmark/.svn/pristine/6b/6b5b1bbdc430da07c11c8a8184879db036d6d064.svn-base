@@ -1,0 +1,30 @@
+﻿*{ margin:0; padding:0;}
+body { font-family: 'Segoe UI', sans-serif; font-size:12px;width: 500px;height: 500px;border: 1px solid #ccc;}
+ul,li{ list-style:none;}
+
+.nav {  width:200px; border-right:1px solid #ccc; overflow:auto; float:left;}
+
+.nav li{ margin-left:15px; padding:1px 0;}
+.nav li.selected>a>span{background-color:blue;color:white;}
+
+.nav a{ display:inline-block; text-indent:20px; background-repeat:no-repeat; cursor:default;}
+.nav a.open{ background-image:url(images/open.png); }
+.nav a.close{ background-image:url(images/close.png);}
+.nav a input{  width:80px;}
+
+
+.nav .node_leaf a{ margin-left:16px;}
+
+.nav .icon{ display:inline-block; transform: rotate(-90deg); transition: all 150ms;background: url(images/state.svg) no-repeat center center; background-size: 8px 5px; display: inline-block; height: 16px; opacity: .6; position: relative;vertical-align: top;width: 16px;}
+.nav .icon.open {transform: rotate(0);}
+
+ .menu{ position:absolute; border:1px solid #ccc;box-shadow:1px 1px 2px #333333; background:#fff; padding:2px 0; z-index:999; cursor:default;}
+ .menu li{ padding:4px 10px;}
+ .menu li.selected{background-color:#eee;}
+
+
+ .page_list{ width:295px;  float:right;}
+ .page_list li{ padding:3px 0; cursor: default;}
+ .page_list input{display:inline-block;}
+ .page_list .title input{ width:100px;}
+  .page_list .url input{ width:150px;}

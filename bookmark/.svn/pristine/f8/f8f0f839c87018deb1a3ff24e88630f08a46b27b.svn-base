@@ -1,0 +1,31 @@
+///<reference path="scripts/jquery/jquery.d.ts" />
+///<reference path="scripts/bookmark_right_click_menu.ts" />
+///<reference path="scripts/bookmark_container.ts" />
+///<reference path="scripts/bookmark_page_list.ts" />
+var BookMark;
+(function (BookMark) {
+    var Main = (function () {
+        function Main() {
+            var bookMarkPageList = new BookMark.BookMarkPageList();
+            bookMarkPageList.add({ id: 1, title: "新浪网", url: "http://www.sina.com/" });
+            bookMarkPageList.add({ id: 5, title: "新浪网1", url: "http://www.sina.com/" });
+            bookMarkPageList.add({ id: 3, title: "新浪网2", url: "http://www.sina.com/" });
+            bookMarkPageList.add({ id: 4, title: "新浪网3", url: "http://www.sina.com/" });
+            bookMarkPageList.render("page_list");
+            bookMarkPageList.onItemAdd = function (data) {
+                console.log(data);
+            };
+            var pageListRightClickMenu = new BookMark.PageListRightClickMenu();
+            pageListRightClickMenu.render();
+            pageListRightClickMenu.onDel = function () { };
+            pageListRightClickMenu.onEdit = function () { };
+            pageListRightClickMenu.onOpen = function () { };
+            bookMarkPageList.onRightClick = function (e) {
+                pageListRightClickMenu.show(e.pageX, e.pageY);
+            };
+            bookMarkPageList.newItem();
+        }
+        return Main;
+    }());
+    new Main();
+})(BookMark || (BookMark = {}));

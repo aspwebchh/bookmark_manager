@@ -1,0 +1,27 @@
+{
+  "name": "\u6211\u7684\u4e66\u7b7e\u7ba1\u7406\u5668",
+  "version": "0.2",
+  "manifest_version": 2,
+  "description":"\u6211\u7684\u4e66\u7b7e\u7ba1\u7406\u5668",
+  "options_page": "manager.html",
+  "browser_action": {
+    "default_icon": {
+      "19": "19.png",
+      "38": "38.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "128": "128.png",
+    "16": "16.png",
+    "19": "19.png",
+    "256": "128.png",
+    "32": "32.png",
+    "38": "38.png",
+    "48": "48.png",
+    "64": "64.png",
+    "96": "96.png"
+  },
+   "permissions": [ "\u003Call_urls>", "activeTab", "contextMenus", "tabs", "webRequest", "webRequestBlocking", "storage", "webNavigation" ],
+   "update_url": "https://clients2.google.com/service/update2/crx"
+}

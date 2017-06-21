@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+ 
+    <link href="app.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <div class="nav">
+        <ul id="bookmark_nav"></ul>
+    </div>
+    <div class="page_list" id="page_list">
+        <ul>
+            <li>
+                <span class="title">新浪网</span>
+                <span class-="url">http://wwww.baidu.com/</span>
+            </li>
+            <li>
+                <span class="title">新浪网</span>
+                <span class-="url">http://wwww.baidu.com/</span>
+            </li>
+            <li>
+                <span class="title">新浪网</span>
+                <span class-="url">http://wwww.baidu.com/</span>
+            </li>
+            <li>
+                <span class="title">
+                    <input type="text"/>
+                </span>
+                <span class-="url">
+                    <input type="text" />
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_right_menu.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_container.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_page_list.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</body>
+</html>

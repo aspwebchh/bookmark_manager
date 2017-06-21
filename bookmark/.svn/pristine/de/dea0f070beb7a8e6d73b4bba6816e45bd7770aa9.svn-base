@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link href="app.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <div class="nav">
+        <ul id="bookmark_nav"></ul>
+    </div>
+    <div class="page_list" id="page_list">
+
+    </div>
+    <a href="javascript:;" target="_blank" id="manager">管理</a>
+
+    <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_right_click_menu.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_container.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_page_list.js"></script>
+    <script type="text/javascript" src="manager.js"></script>
+    <script type="text/javascript"></script>
+</body>
+</html>

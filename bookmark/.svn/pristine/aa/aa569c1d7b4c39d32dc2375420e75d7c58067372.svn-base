@@ -1,0 +1,72 @@
+///<reference path="scripts/jquery/jquery.d.ts" />
+///<reference path="scripts/bookmark_right_click_menu.ts" />
+///<reference path="scripts/bookmark_container.ts" />
+var BookMark;
+(function (BookMark) {
+    var Popup = (function () {
+        function Popup() {
+            this.bookMarkNavManager = new BookMark.BookMarkManager();
+            this.initNavMenu();
+            this.fillCurrBookMarkInfo();
+            this.initSaveAction();
+            this.initManagerAction();
+        }
+        Popup.prototype.initSaveAction = function () {
+            var _this = this;
+            var showErrorMessage = function (msg) {
+                $("#error_msg").html(msg).show();
+            };
+            var hideErrorMessage = function () {
+                $("#error_msg").html('').hide();
+            };
+            $("#ok").bind("click", function () {
+                var title = $.trim($("#title").val());
+                var url = $.trim($("#url").val());
+                if (title == '') {
+                    showErrorMessage("请输入标题");
+                    return;
+                }
+                if (url == '') {
+                    showErrorMessage("请输入网址");
+                    return;
+                }
+                if (_this.selectedNode == null) {
+                    showErrorMessage("请选择目录");
+                    return;
+                }
+                var bookMarkId = _this.selectedNode.getSource().id;
+                hideErrorMessage();
+            });
+        };
+        Popup.prototype.initManagerAction = function () {
+        };
+        Popup.prototype.fillCurrBookMarkInfo = function () {
+            chrome.tabs.getSelected(function (tab) {
+                $("#title").val(tab.title);
+                $("#url").val(tab.url);
+            });
+        };
+        Popup.prototype.initNavMenu = function () {
+            var _this = this;
+            this.bookMarkNavManager = new BookMark.BookMarkManager();
+            this.bookMarkNavManager.addBookMarkData({ id: 0, pid: -1, title: "" });
+            this.bookMarkNavManager.addBookMarkData({ id: 1, pid: 0, title: "\u76EE\u5F551" });
+            this.bookMarkNavManager.addBookMarkData({ id: 2, pid: 0, title: "\u76EE\u5F552" });
+            this.bookMarkNavManager.addBookMarkData({ id: 3, pid: 0, title: "\u76EE\u5F553" });
+            this.bookMarkNavManager.addBookMarkData({ id: 11, pid: 1, title: "\u76EE\u5F5511" });
+            this.bookMarkNavManager.addBookMarkData({ id: 12, pid: 1, title: "\u76EE\u5F5512" });
+            this.bookMarkNavManager.addBookMarkData({ id: 21, pid: 2, title: "\u76EE\u5F5521" });
+            this.bookMarkNavManager.addBookMarkData({ id: 22, pid: 2, title: "\u76EE\u5F5522" });
+            this.bookMarkNavManager.addBookMarkData({ id: 211, pid: 21, title: "\u76EE\u5F55211" });
+            this.bookMarkNavManager.addBookMarkData({ id: 212, pid: 21, title: "\u76EE\u5F55212" });
+            this.bookMarkNavManager.onNodeClick = function (arg) {
+                _this.selectedNode = arg;
+                _this.bookMarkNavManager.select(arg);
+            };
+            this.bookMarkNavManager.render("cate");
+        };
+        return Popup;
+    }());
+    new Popup();
+})(BookMark || (BookMark = {}));
+//# sourceMappingURL=popup.js.map

@@ -1,0 +1,33 @@
+
+/// <reference path="jquery/jquery.d.ts" />
+
+namespace ContentScripts {
+    function init() {
+        chrome.extension.onRequest.addListener((request, sender, sendResponse) => {
+            let giftData = request as GiftData;
+            sendGifts(giftData, (data) => {
+                let reData = {} as ReturnData;
+                reData.success = true;
+                reData.uid = giftData.recipient;
+                sendResponse(reData);
+            });
+        });
+    }
+
+
+    function sendGifts(giftData: GiftData, callback: (data: any) => void) {
+        let ajaxOption = new Object as JQueryAjaxSettings;
+        ajaxOption.url = "/support/gift_user/";
+        ajaxOption.method = "post";
+        ajaxOption.dataType = "html";
+        ajaxOption.data = giftData;
+        ajaxOption.success = (response) => {
+            callback(response);
+        };
+        $.ajax(ajaxOption);
+    }
+
+    $(() => {
+        init();
+    })
+}

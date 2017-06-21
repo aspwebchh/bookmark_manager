@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+ 
+    <link href="app.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+    <div class="nav">
+        <ul id="bookmark_nav"></ul>
+    </div>
+    <script type="text/javascript" src="scripts/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="scripts/menu.js"></script>
+    <script type="text/javascript" src="scripts/bookmark_container.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</body>
+</html>

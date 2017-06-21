@@ -1,0 +1,102 @@
+///<reference path="common.ts" />
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator.throw(value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments)).next());
+    });
+};
+var BookMark;
+(function (BookMark) {
+    class DataSource {
+        static jsonpHttp(url, data = "") {
+            return __awaiter(this, void 0, Promise, function* () {
+                return new Promise((resolve, reject) => {
+                    let ajaxSetting = {};
+                    ajaxSetting.url = url;
+                    ajaxSetting.type = "post";
+                    ajaxSetting.dataType = "html";
+                    ajaxSetting.data = { data: data };
+                    ajaxSetting.success = (response) => {
+                        resolve(response);
+                    };
+                    ajaxSetting.error = () => {
+                        reject("请求出错");
+                    };
+                    $.ajax(ajaxSetting);
+                });
+            });
+        }
+        static getDataURL(method) {
+            let url = `http://localhost:9528/bookmark?method=${method}`;
+            return url;
+        }
+        static getCategories() {
+            return __awaiter(this, void 0, Promise, function* () {
+                let url = DataSource.getDataURL("getCategories");
+                let data = yield DataSource.jsonpHttp(url);
+                if (!data) {
+                    return [{ id: 0, pid: -1, title: "" }];
+                }
+                else {
+                    let result = JSON.parse(data);
+                    return result;
+                }
+            });
+        }
+        static updateCategories(data) {
+            return __awaiter(this, void 0, Promise, function* () {
+                let dataString = JSON.stringify(data);
+                let url = DataSource.getDataURL("updateCategories");
+                yield DataSource.jsonpHttp(url, dataString);
+            });
+        }
+        static getAllPages() {
+            return __awaiter(this, void 0, Promise, function* () {
+                let url = DataSource.getDataURL("getAllPages");
+                let jsonString = (yield DataSource.jsonpHttp(url)) || "[]";
+                let jsonData = JSON.parse(jsonString);
+                let data = jsonData;
+                return data;
+            });
+        }
+        static setAllPages(allData) {
+            return __awaiter(this, void 0, Promise, function* () {
+                let dataString = JSON.stringify(allData);
+                let url = DataSource.getDataURL("setAllPages");
+                yield DataSource.jsonpHttp(url, dataString);
+            });
+        }
+        static addPage(page) {
+            return __awaiter(this, void 0, Promise, function* () {
+                let data = yield DataSource.getAllPages();
+                data.push(page);
+                yield DataSource.setAllPages(data);
+            });
+        }
+        static removePage(id) {
+            return __awaiter(this, void 0, Promise, function* () {
+                let data = yield DataSource.getAllPages();
+                data = data.filter(n => n.id != id);
+                yield DataSource.setAllPages(data);
+            });
+        }
+        static editPage(page) {
+            return __awaiter(this, void 0, Promise, function* () {
+                yield this.removePage(page.id);
+                yield this.addPage(page);
+            });
+        }
+        static getPages(cid) {
+            return __awaiter(this, void 0, Promise, function* () {
+                const data = yield DataSource.getAllPages();
+                return data.filter(n => n.cid == cid);
+            });
+        }
+    }
+    DataSource.KEY_CATE = "book_mark_cate";
+    DataSource.KEY_PAGE = "book_mark_page";
+    BookMark.DataSource = DataSource;
+})(BookMark || (BookMark = {}));
+//# sourceMappingURL=data_source.js.map

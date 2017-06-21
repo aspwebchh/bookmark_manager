@@ -1,0 +1,30 @@
+﻿///<reference path="scripts/jquery/jquery.d.ts" />
+///<reference path="scripts/bookmark_right_click_menu.ts" />
+///<reference path="scripts/bookmark_container.ts" />
+///<reference path="scripts/bookmark_page_list.ts" />
+
+namespace BookMark {
+    class Main {
+        constructor() {
+            let bookMarkPageList = new BookMarkPageList();
+            bookMarkPageList.add({ id: 1, title: "新浪网", url: "http://www.sina.com/" });
+            bookMarkPageList.add({ id: 5, title: "新浪网1", url: "http://www.sina.com/" });
+            bookMarkPageList.add({ id: 3, title: "新浪网2", url: "http://www.sina.com/" });
+            bookMarkPageList.add({ id: 4, title: "新浪网3", url: "http://www.sina.com/" });
+            bookMarkPageList.render("page_list");
+            bookMarkPageList.onItemAdd = (data:BookMarkPageDataItem) =>{
+                console.log(data);
+            }
+            let pageListRightClickMenu = new PageListRightClickMenu();
+            pageListRightClickMenu.render();
+            pageListRightClickMenu.onDel = () => {}
+            pageListRightClickMenu.onEdit = () =>{}
+            pageListRightClickMenu.onOpen = () => {}
+            bookMarkPageList.onRightClick = (e:JQueryEventObject) =>{
+                 pageListRightClickMenu.show(e.pageX,e.pageY);
+            }
+            bookMarkPageList.newItem();
+        }
+    }
+    new Main();
+}

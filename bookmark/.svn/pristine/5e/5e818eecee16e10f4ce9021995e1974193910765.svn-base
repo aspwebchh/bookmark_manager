@@ -1,0 +1,57 @@
+﻿///<reference path="common.ts" />
+
+namespace BookMark {
+    export class DataSource {
+        private static KEY_CATE = "book_mark_cate";
+        private static KEY_PAGE = "book_mark_page";
+
+    
+        public static async getCategories(): Promise<BookMarkDataItem[]>{
+            let data = localStorage[DataSource.KEY_CATE];
+            if (!data) {
+                return [{ id: 0, pid: -1, title: "" }];
+            } else {
+                let result = JSON.parse(data);
+                return (result as BookMarkDataItem[]);
+            }
+        }
+
+        public static async updateCategories(data: BookMarkDataItem[]): Promise<boolean>{
+            localStorage[DataSource.KEY_CATE] = JSON.stringify( data );
+            return true;
+        }
+
+        private static async getAllPages(): Promise<BookMarkPageDataItem[]> {
+            const jsonString = localStorage[DataSource.KEY_PAGE] || "[]";
+            const jsonData = JSON.parse(jsonString);
+            const data = jsonData as BookMarkPageDataItem[];
+            return data;
+        }
+
+        private static async setAllPages(allData: BookMarkPageDataItem[]): Promise<void>{
+            localStorage[DataSource.KEY_PAGE] = JSON.stringify( allData );
+        }
+
+        public static async addPage(page: BookMarkPageDataItem): Promise<void> {
+            let data = await DataSource.getAllPages();
+            data.push(page);
+            DataSource.setAllPages(data);
+        }
+
+        public static async removePage(id: number): Promise<void> {
+            let data = await DataSource.getAllPages();
+            data = data.filter(n => n.id != id);
+            DataSource.setAllPages(data);
+        }
+
+        public static async editPage(page: BookMarkPageDataItem): Promise<void> {
+            await this.removePage(page.id);
+            await this.addPage(page);
+        }
+
+        public static async getPages(cid: number): Promise<BookMarkPageDataItem[]> {
+            const data = await DataSource.getAllPages();
+            return data.filter(n => n.cid == cid);
+        }
+    }
+}

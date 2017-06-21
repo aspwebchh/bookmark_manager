@@ -1,0 +1,114 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+///<reference path="jquery/jquery.d.ts" />
+///<reference path="bookmark_container.ts" />
+var BookMark;
+(function (BookMark) {
+    (function (MenuType) {
+        MenuType[MenuType["BookMarkNavMenu"] = 0] = "BookMarkNavMenu";
+        MenuType[MenuType["PageList"] = 1] = "PageList";
+    })(BookMark.MenuType || (BookMark.MenuType = {}));
+    var MenuType = BookMark.MenuType;
+    var RightClickMenu = (function () {
+        function RightClickMenu() {
+        }
+        RightClickMenu.prototype.show = function (left, top) {
+            this.ele.show().offset({ left: left, top: top });
+        };
+        RightClickMenu.prototype.hide = function () {
+            this.ele.hide();
+        };
+        RightClickMenu.prototype.render = function () {
+            var _this = this;
+            var html = this.getMenuHtml();
+            var menuElement = $(html).hide();
+            $('body').append(menuElement);
+            this.ele = menuElement;
+            $(document).bind("click", function (e) {
+                if (_this.ele.get(0).contains(e.target)) {
+                    return;
+                }
+                _this.hide();
+            });
+            this.ele.find("li").bind("mouseover", function () {
+                $(this).addClass("selected");
+            }).bind("mouseout", function () {
+                $(this).removeClass("selected");
+            });
+            this.ele.find("li").click(function (e) {
+                var id = e.target.id;
+                _this.eventProxy(id);
+                _this.hide();
+            });
+        };
+        return RightClickMenu;
+    }());
+    BookMark.RightClickMenu = RightClickMenu;
+    var BookMarkRightClickMenu = (function (_super) {
+        __extends(BookMarkRightClickMenu, _super);
+        function BookMarkRightClickMenu() {
+            _super.apply(this, arguments);
+            this.onAddDir = function () { };
+            this.onAddPage = function () { };
+            this.onDel = function () { };
+            this.onRename = function () { };
+        }
+        BookMarkRightClickMenu.prototype.setTargetNode = function (node) {
+            this.targetNode = node;
+        };
+        BookMarkRightClickMenu.prototype.getTargetNode = function () {
+            return this.targetNode;
+        };
+        BookMarkRightClickMenu.prototype.eventProxy = function (evenName) {
+            switch (evenName) {
+                case "add_dir":
+                    this.onAddDir();
+                    break;
+                case "add_page":
+                    this.onAddPage();
+                    break;
+                case "del":
+                    this.onDel();
+                    break;
+                case "rename":
+                    this.onRename();
+                    break;
+            }
+        };
+        BookMarkRightClickMenu.prototype.getMenuHtml = function () {
+            return "<div class=\"menu\" id='right_click_menu'>\n                            <ul>\n                                <li id=\"add_dir\">\u6DFB\u52A0\u6587\u4EF6\u5939</li>\n                                <li id=\"add_page\">\u6DFB\u52A0\u7F51\u9875</li>\n                                <li id=\"del\">\u5220\u9664</li>\n                                <li id=\"rename\">\u91CD\u547D\u540D</li>\n                            </ul>\n                        </div>";
+        };
+        return BookMarkRightClickMenu;
+    }(RightClickMenu));
+    BookMark.BookMarkRightClickMenu = BookMarkRightClickMenu;
+    var PageListRightClickMenu = (function (_super) {
+        __extends(PageListRightClickMenu, _super);
+        function PageListRightClickMenu() {
+            _super.apply(this, arguments);
+            this.onOpen = function () { };
+            this.onEdit = function () { };
+            this.onDel = function () { };
+        }
+        PageListRightClickMenu.prototype.eventProxy = function (evenName) {
+            switch (evenName) {
+                case "open_url":
+                    this.onOpen();
+                    break;
+                case "del":
+                    this.onDel();
+                    break;
+                case "edit":
+                    this.onEdit();
+                    break;
+            }
+        };
+        PageListRightClickMenu.prototype.getMenuHtml = function () {
+            return "<div class=\"menu\" id='right_click_menu'>\n                            <ul>\n                                <li id=\"open_url\">\u6253\u5F00\u7F51\u9875</li>\n                                <li id=\"del\">\u5220\u9664</li>\n                                <li id=\"edit\">\u7F16\u8F91</li>\n                            </ul>\n                        </div>";
+        };
+        return PageListRightClickMenu;
+    }(RightClickMenu));
+    BookMark.PageListRightClickMenu = PageListRightClickMenu;
+})(BookMark || (BookMark = {}));

@@ -1,0 +1,75 @@
+﻿///<reference path="jquery/jquery.d.ts" />
+///<reference path="bookmark_container.ts" />
+namespace BookMark {
+    export class BookMarkRightClickMenu {
+        private ele: JQuery;
+        private targetNode: BookMarkNode;
+
+        public onAddDir() { }
+        public onAddPage() { }
+        public onDel() { }
+        public onRename() { }
+
+        public setTargetNode(node: BookMarkNode) {
+            this.targetNode = node;
+        }
+
+        public getTargetNode(): BookMarkNode{
+            return this.targetNode;
+        }
+
+        public render(): void {
+            let html = `<div class="menu" id='right_click_menu'>
+                            <ul>
+                                <li id="add_dir">添加文件夹</li>
+                                <li id="add_page">添加网页</li>
+                                <li id="del">删除</li>
+                                <li id="rename">重命名</li>
+                            </ul>
+                        </div>`;
+            let menuElement = $(html).hide();
+            $('body').append(menuElement);
+            this.ele = menuElement;
+
+            $(document).bind("click", (e: JQueryEventObject) => {
+                if (this.ele.get(0).contains(e.target)) {
+                    return;
+                }
+                this.hide();
+            });
+
+            this.ele.find("li").bind("mouseover", function () {
+                $(this).addClass("selected");
+            }).bind("mouseout", function () {
+                $(this).removeClass("selected");
+            });
+
+            this.ele.find("li").click((e: JQueryEventObject) => {
+                let id = e.target.id;
+                switch (id) {
+                    case "add_dir":
+                        this.onAddDir();
+                        break;
+                    case "add_page":
+                        this.onAddPage();
+                        break;
+                    case "del":
+                        this.onDel();
+                        break;
+                    case "rename":
+                        this.onRename();
+                        break;
+                }
+                this.hide();
+            });
+        }
+
+        public show(left: number, top: number): void {
+            this.ele.show().offset({ left: left, top: top });
+        }
+
+        public hide(): void {
+            this.ele.hide();
+        }
+    }
+}
